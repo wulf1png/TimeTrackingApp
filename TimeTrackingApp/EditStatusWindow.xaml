@@ -1,0 +1,49 @@
+﻿<Window x:Class="TimeTrackingApp.EditStatusWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TimeTrackingApp"
+        mc:Ignorable="d"
+        Title="EditStatusWindow" Height="300" Width="583"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        BorderThickness="0" UseLayoutRounding="True" 
+             SnapsToDevicePixels="True">
+    
+    <!-- Тень окна -->
+    <!--<Window.Effect>
+        <DropShadowEffect Color="DeepPink" BlurRadius="30" ShadowDepth="0" Opacity="0.4"/>
+    </Window.Effect>-->
+
+    <Window.Resources>
+        
+    </Window.Resources>
+
+    <Border CornerRadius="16" BorderBrush="#4A90E2" BorderThickness="1" Background="White">
+        <Border.RenderTransform>
+            <TranslateTransform x:Name="WindowTranslate" Y="60"/>
+        </Border.RenderTransform>
+        <StackPanel>
+            <TextBlock Text="Проставить Отпуска (опл, неопл) / Больничные" Style="{StaticResource TitleText}" Margin="10"/>
+            <StackPanel Margin="10,10" Orientation="Horizontal">
+                <TextBlock Text="Статус:" VerticalAlignment="Center" Width="100" Style="{StaticResource ModernTextBlock}"/>
+                <ComboBox x:Name="StatusTypeCombo" Width="250" Style="{StaticResource ModernComboBox_NULL}"/>
+            </StackPanel>
+            <StackPanel Margin="10,5" Orientation="Horizontal">
+                <TextBlock Text="Начало:" VerticalAlignment="Center" Width="100" Style="{StaticResource ModernTextBlock}"/>
+                <DatePicker x:Name="StartDatePicker" Width="120"/>
+            </StackPanel>
+            <StackPanel Margin="10,5" Orientation="Horizontal">
+                <TextBlock Text="Окончание:" VerticalAlignment="Center" Width="100" Style="{StaticResource ModernTextBlock}"/>
+                <DatePicker x:Name="EndDatePicker" Width="120"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                <Button Content="Сохранить" Width="120" Click="Apply_Click" Height="30" Style="{StaticResource ModernButton}"/>
+                <Button Content="Отмена" Width="100" Click="Cancel_Click" Style="{StaticResource ModernButton_RED}"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

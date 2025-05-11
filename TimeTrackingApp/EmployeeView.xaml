@@ -1,0 +1,292 @@
+﻿<UserControl x:Class="TimeTrackingApp.EmployeeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             MinWidth="750" MinHeight="800" Background="{DynamicResource SoftBackground}" UseLayoutRounding="True" 
+             SnapsToDevicePixels="True">
+
+    <UserControl.Resources>
+
+        <LinearGradientBrush x:Key="SoftBackground" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#F7F9FC" Offset="0" />
+            <GradientStop Color="#E3F2FD" Offset="1" />
+        </LinearGradientBrush>
+
+        <ControlTemplate x:Key="TrackFillTemplate" TargetType="RepeatButton">
+            <Grid VerticalAlignment="Center" SnapsToDevicePixels="True">
+                <Rectangle Height="6"
+            VerticalAlignment="Center"
+            RadiusX="3" RadiusY="3"
+            Fill="#4A90E2"/>
+            </Grid>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="TrackBackgroundTemplate" TargetType="RepeatButton">
+            <Grid VerticalAlignment="Center" SnapsToDevicePixels="True">
+                <Rectangle Height="6"
+            VerticalAlignment="Center"
+            RadiusX="3" RadiusY="3"
+            Fill="#D0D7E5"/>
+            </Grid>
+        </ControlTemplate>
+
+
+        <!-- Цвета -->
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#4A90E2"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#50E3C2"/>
+        <SolidColorBrush x:Key="BackgroundBrush" Color="#F7F9FC"/>
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="White"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#D0D7E5"/>
+        <SolidColorBrush x:Key="TextBrush" Color="#2C3E50"/>
+
+        <!-- Анимация для карточек -->
+        <Style x:Key="CardAnimated" TargetType="Border">
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                             To="1.01" Duration="0:0:0.2"/>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                             To="1.01" Duration="0:0:0.2"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                             To="1" Duration="0:0:0.2"/>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                             To="1" Duration="0:0:0.2"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+    <Border Background="{Binding Background, RelativeSource={RelativeSource AncestorType=UserControl}}" BorderBrush="{StaticResource BorderBrush}">
+        <Grid Margin="20" SnapsToDevicePixels="True">
+            <StackPanel>
+                <TextBlock Text="Личный кабинет"
+                           Style="{StaticResource TitleText}"
+                           Margin="0,0,0,20"/>
+
+                <!-- Календарь -->
+                <Border 
+                        Background="{StaticResource CardBackgroundBrush}"
+                        Padding="16"
+                        CornerRadius="12"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        Margin="0,0,0,16">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.2"/>
+                    </Border.Effect>
+
+                    <Grid>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,8">
+                                <Button Content="◀" Click="PreviousMonth_Click" Style="{StaticResource ModernButton}" Width="40" Height="40"/>
+                                <TextBlock x:Name="MonthText"
+               Text="{Binding CurrentMonth, StringFormat={}{0:MMMM yyyy}}"
+               FontSize="18"
+               FontWeight="Bold"
+               Foreground="{StaticResource TextBrush}"
+               Margin="12,0"
+               Style="{StaticResource ModernTextBlock}"
+               VerticalAlignment="Center"/>
+                                <Button Content="▶" Click="NextMonth_Click" Style="{StaticResource ModernButton}" Width="40" Height="40"/>
+                            </StackPanel>
+
+                            <UniformGrid Columns="7" Margin="0,8">
+                                <TextBlock Text="ПН" Style="{StaticResource TitleText}" FontSize="14"/>
+                                <TextBlock Text="ВТ" Style="{StaticResource TitleText}" FontSize="14"/>
+                                <TextBlock Text="СР" Style="{StaticResource TitleText}" FontSize="14"/>
+                                <TextBlock Text="ЧТ" Style="{StaticResource TitleText}" FontSize="14"/>
+                                <TextBlock Text="ПТ" Style="{StaticResource TitleText}" FontSize="14"/>
+                                <TextBlock Text="СБ" Style="{StaticResource TitleText}" FontSize="14" Foreground="#03A9F4"/>
+                                <TextBlock Text="ВС" Style="{StaticResource TitleText}" FontSize="14" Foreground="#F44336"/>
+                            </UniformGrid>
+                            <Grid x:Name="CalendarGrid" Margin="0,8,0,0" SnapsToDevicePixels="True">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                            </Grid>
+                        </StackPanel>
+
+                        <Border x:Name="LoadingOverlay" Style="{StaticResource LoadingOverlayStyle}" Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="97*"/>
+                                    <ColumnDefinition Width="143*"/>
+                                </Grid.ColumnDefinitions>
+                                <!-- Индикатор загрузки -->
+                                <ContentControl x:Name="SpinnerControl" Style="{StaticResource LoadingSpinner}" HorizontalAlignment="Left" Grid.Column="1" Margin="62,0,0,0"/>
+                                <!--<TextBlock Text="Загрузка календаря..."
+                           Margin="0,8,0,0"
+                           HorizontalAlignment="Center"
+                           Foreground="{StaticResource TextBrush}"/>-->
+                            </Grid>
+                        </Border>
+
+                    </Grid>
+                </Border>
+
+                <!-- Статусы -->
+                <Border 
+                        Background="{StaticResource CardBackgroundBrush}"
+                        Padding="16"
+                        CornerRadius="12"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        Margin="0,0,0,16">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.2"/>
+                    </Border.Effect>
+                    <Grid>
+                        <StackPanel>
+                            <TextBlock Text="Выберите статус:" FontSize="16" FontWeight="Bold" Margin="0,0,0,8" Style="{StaticResource TitleText}"/>
+                            <WrapPanel x:Name="StatusButtonsPanel" HorizontalAlignment="Center">
+                                <Button Tag="На работе" Click="StatusButton_Click" Style="{StaticResource StatusButtonStyle}">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <TextBlock Text="⏰" FontSize="16" Margin="0,0,6,0"/>
+                                            <TextBlock Text="На работе"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                                <Button Tag="Обед" Click="StatusButton_Click" Style="{StaticResource StatusButtonStyle}">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <TextBlock Text="🍔" FontSize="16" Margin="0,0,6,0"/>
+                                            <TextBlock Text="Обед"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                                <Button Tag="IT проблемы" Click="StatusButton_Click" Style="{StaticResource StatusButtonStyle}">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <TextBlock Text="💻" FontSize="16" Margin="0,0,6,0"/>
+                                            <TextBlock Text="IT проблемы"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                                <Button Tag="Тренинг" Click="StatusButton_Click" Style="{StaticResource StatusButtonStyle}">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <TextBlock Text="📚" FontSize="16" Margin="0,0,6,0"/>
+                                            <TextBlock Text="Тренинг"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                                <Button Tag="Собрание" Click="StatusButton_Click" Style="{StaticResource StatusButtonStyle}">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <TextBlock Text="📅" FontSize="16" Margin="0,0,6,0"/>
+                                            <TextBlock Text="Собрание"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                            </WrapPanel>
+                            <Button x:Name="EndShiftButton"
+Content="🛑 Завершить смену"
+Click="EndShiftButton_Click"
+Style="{StaticResource EndShiftButtonStyle}"
+IsEnabled="False"
+HorizontalAlignment="Center"
+Margin="10"/>
+                            <TextBlock x:Name="EmployeeNameTextBlock"
+                   Text="Сотрудник:"
+                   FontSize="16"
+                   FontWeight="Bold"
+                   Foreground="#2E3A59"
+                   HorizontalAlignment="Center"/>
+                        </StackPanel>
+
+                        <Border x:Name="LoadingOverlay_Status" Style="{StaticResource LoadingOverlayStyle}" Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+                            <Grid>
+                                <!-- Индикатор загрузки -->
+                                <ContentControl x:Name="SpinnerControl_Status" Style="{StaticResource LoadingSpinner}" HorizontalAlignment="Center"
+VerticalAlignment="Center"/>
+                                <!--<TextBlock Text="Загрузка календаря..."
+         Margin="0,8,0,0"
+         HorizontalAlignment="Center"
+         Foreground="{StaticResource TextBrush}"/>-->
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- График -->
+                <StackPanel Margin="0,20,0,0">
+                    <TextBlock Text="График" Style="{StaticResource TitleText}" Margin="0,0,0,8"/>
+                    <!-- Легенда -->
+                    <StackPanel Margin="12,0,0,12">
+                        <WrapPanel>
+                            <Rectangle Fill="LimeGreen" Width="20" Height="20"/>
+                            <TextBlock Text="— На работе" Margin="5,0,20,0" Style="{StaticResource ModernTextBlock}"/>
+                            <Rectangle Fill="Yellow" Width="20" Height="20"/>
+                            <TextBlock Text="— Обед" Margin="5,0,20,0" Style="{StaticResource ModernTextBlock}"/>
+                            <Rectangle Fill="MediumPurple" Width="20" Height="20"/>
+                            <TextBlock Text="— IT проблемы" Margin="5,0,20,0" Style="{StaticResource ModernTextBlock}"/>
+                            <Rectangle Fill="Blue" Width="20" Height="20"/>
+                            <TextBlock Text="— Тренинг" Margin="5,0,20,0" Style="{StaticResource ModernTextBlock}"/>
+                            <Rectangle Fill="LightSkyBlue" Width="20" Height="20"/>
+                            <TextBlock Text="— Собрание" Margin="5,0,0,0" Style="{StaticResource ModernTextBlock}"/>
+                        </WrapPanel>
+                    </StackPanel>
+
+                    <!-- Масштаб -->
+                    <StackPanel Orientation="Horizontal" Margin="12,10,0,12">
+                        <TextBlock Text="Масштаб:" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="Gray" Style="{StaticResource ModernTextBlock}"/>
+                        <Slider x:Name="ZoomSlider" Minimum="0.5" Maximum="2" Value="1" Width="200" TickFrequency="0.1" IsSnapToTickEnabled="False" ValueChanged="ZoomSlider_ValueChanged" Loaded="ZoomSlider_Loaded"/>
+                    </StackPanel>
+
+                    <Border 
+                        Background="{StaticResource CardBackgroundBrush}"
+                        Padding="16"
+                        CornerRadius="12"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        Margin="0,0,0,16">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.2"/>
+                        </Border.Effect>
+                        <Grid>
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                                <Viewbox Stretch="Uniform" StretchDirection="DownOnly">
+                                    <Canvas x:Name="GraphCanvas" Width="960" Height="200" Background="White" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+                                </Viewbox>
+                            </ScrollViewer>
+
+                            <Border x:Name="LoadingOverlay_Graph" Style="{StaticResource LoadingOverlayStyle}" Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+                                <Grid>
+                                    <!-- Индикатор загрузки -->
+                                    <ContentControl x:Name="SpinnerControl_Graph" Style="{StaticResource LoadingSpinner}" HorizontalAlignment="Center"
+VerticalAlignment="Center"/>
+                                    <!--<TextBlock Text="Загрузка календаря..."
+         Margin="0,8,0,0"
+         HorizontalAlignment="Center"
+         Foreground="{StaticResource TextBrush}"/>-->
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

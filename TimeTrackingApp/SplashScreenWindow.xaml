@@ -1,0 +1,31 @@
+﻿<Window x:Class="TimeTrackingApp.SplashScreenWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Width="500" Height="300"
+        ShowInTaskbar="False"
+        Topmost="True"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded" UseLayoutRounding="True" 
+             SnapsToDevicePixels="True">
+    <Window.Resources>
+        <Storyboard x:Key="FadeInStoryboard" AutoReverse="True">
+            <DoubleAnimation 
+                Storyboard.TargetProperty="Opacity"
+                From="0" To="1" Duration="0:0:2"/>
+        </Storyboard>
+    </Window.Resources>
+
+    <Grid SnapsToDevicePixels="True">
+        <Border CornerRadius="16" Background="White" Padding="20" Effect="{DynamicResource DropShadowEffect}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+                <TextBlock Text="Time Tracker" FontSize="28" FontWeight="Bold" Foreground="#4A90E2" Margin="0,0,0,8" />
+                <TextBlock Text="Добро пожаловать..." FontSize="16" Foreground="#2C3E50" Margin="0,0,0,20" />
+                <ProgressBar IsIndeterminate="True" Height="6" Width="200" Foreground="#4A90E2" Style="{DynamicResource MaterialDesignLinearProgressBar}" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

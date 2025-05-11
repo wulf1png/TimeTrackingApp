@@ -1,0 +1,733 @@
+﻿<Application x:Class="TimeTrackingApp.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="SplashScreenWindow.xaml" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:controls="clr-namespace:System.Windows.Controls;assembly=PresentationFramework" xmlns:converters="clr-namespace:TimeTrackingApp" xmlns:local="clr-namespace:TimeTrackingApp">
+    
+    
+    <Application.Resources>
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="BlueGrey" SecondaryColor="Pink" />
+
+                <!--Правильные пути-->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Indigo.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#4A90E2"/>
+            <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#A6CDEC"/>
+            <SolidColorBrush x:Key="PrimaryHueDarkBrush"  Color="#1667A5"/>
+            <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#50E3C2"/>
+
+            <SolidColorBrush x:Key="ButtonDefaultBackground" Color="#FFF9F9F9"/>
+            <DropShadowEffect x:Key="DropShadowEffect" BlurRadius="15" ShadowDepth="2" Opacity="0.3" Color="#000000"/>
+            <DropShadowEffect x:Key="DropShadow" BlurRadius="8" ShadowDepth="2" Opacity="0.15"/>
+
+            <Style TargetType="DatePicker" BasedOn="{StaticResource MaterialDesignDatePicker}">
+                <Setter Property="Padding" Value="6"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Margin" Value="8"/>
+            </Style>
+
+            <converters:SliderValueToWidthConverter x:Key="SliderValueToWidthConverter"/>
+
+            <Color x:Key="PrimaryColor">#4A90E2</Color>
+            <Color x:Key="BackgroundColor">#F7F9FC</Color>
+            <Color x:Key="CardColor">White</Color>
+            <Color x:Key="BorderColor">#D0D7E5</Color>
+            <Color x:Key="TextColor">#2C3E50</Color>
+            <Color x:Key="DangerColor">#E74C3C</Color>
+
+            <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}" />
+            <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
+            <SolidColorBrush x:Key="CardBrush" Color="{StaticResource CardColor}" />
+            <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}" />
+            <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}" />
+            <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}" />
+
+            <!-- 🧾 Текст -->
+            <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="28"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                <Setter Property="Margin" Value="0 0 0 20"/>
+            </Style>
+
+            <Style x:Key="SubHeaderTextStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            </Style>
+
+            <Style x:Key="LabelTextStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="Normal"/>
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                <Setter Property="Margin" Value="0 5 0 2"/>
+            </Style>
+
+            <!-- 🧊 Карточка -->
+            <Style x:Key="CardStyle" TargetType="Border">
+                <Setter Property="CornerRadius" Value="12"/>
+                <Setter Property="Background" Value="{StaticResource CardBrush}"/>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect Color="Black" BlurRadius="8" ShadowDepth="2" Opacity="0.2"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- ✍️ TextBox -->
+            <Style x:Key="StyledTextBox" TargetType="TextBox">
+                <Setter Property="Margin" Value="0 0 0 10"/>
+                <Setter Property="Padding" Value="8"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TextBox">
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="6">
+                                <ScrollViewer Margin="0" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- 📦 ComboBox -->
+            <Style x:Key="StyledComboBox" TargetType="ComboBox">
+                <Setter Property="Margin" Value="0 0 0 10"/>
+                <Setter Property="Padding" Value="6"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="6">
+                                <Grid>
+                                    <ToggleButton x:Name="DropDownButton" Focusable="False" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                    <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- 📋 ListBox -->
+            <Style x:Key="StyledListBox" TargetType="ListBox">
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="Padding" Value="5"/>
+                <Setter Property="ItemContainerStyle">
+                    <Setter.Value>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Margin" Value="0 2"/>
+                            <Setter Property="Padding" Value="6 4"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border Background="{TemplateBinding Background}" 
+                                        CornerRadius="4">
+                                            <ContentPresenter VerticalAlignment="Center" Margin="4"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#E6F0FA"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- 🟦 Кнопка: Primary -->
+            <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+                <Setter Property="Margin" Value="0"/>
+                <Setter Property="Padding" Value="10 6"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#5BA1E5"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- ❌ Кнопка: Danger -->
+            <Style x:Key="DangerButtonStyle" BasedOn="{StaticResource PrimaryButtonStyle}" TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource DangerBrush}"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#C0392B"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+
+
+
+            <!-- Textbox -->
+
+            <Style x:Key="STextBox" TargetType="TextBox">
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Padding" Value="10,6"/>
+                <Setter Property="Foreground" Value="#2C3E50"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Height" Value="34"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TextBox">
+                            <Border x:Name="Bd"
+                 Background="{TemplateBinding Background}"
+                 BorderBrush="{TemplateBinding BorderBrush}"
+                 BorderThickness="{TemplateBinding BorderThickness}"
+                 CornerRadius="10"
+                 SnapsToDevicePixels="True">
+                                <Grid>
+                                    <ScrollViewer x:Name="PART_ContentHost"
+                               VerticalAlignment="Center"
+                               Margin="2"/>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                    <Setter TargetName="Bd" Property="Background" Value="#FBFCFF"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="Bd" Property="Background" Value="#EEE"/>
+                                    <Setter Property="Foreground" Value="#AAA"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- PasswordBox -->
+
+            <Style x:Key="StyledPasswordBox" TargetType="PasswordBox">
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Padding" Value="10,6"/>
+                <Setter Property="Foreground" Value="#2C3E50"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Height" Value="34"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="PasswordBox">
+                            <Border x:Name="Bd"
+                 Background="{TemplateBinding Background}"
+                 BorderBrush="{TemplateBinding BorderBrush}"
+                 BorderThickness="{TemplateBinding BorderThickness}"
+                 CornerRadius="10"
+                 SnapsToDevicePixels="True">
+                                <ScrollViewer x:Name="PART_ContentHost"
+                           VerticalAlignment="Center"
+                           Margin="2"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                    <Setter TargetName="Bd" Property="Background" Value="#FBFCFF"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="Bd" Property="Background" Value="#EEE"/>
+                                    <Setter Property="Foreground" Value="#AAA"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- TextBlock ОБЫЧНЫЙ ТЕКСТ-->
+
+            <Style x:Key="ModernTextBlock" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="#2C3E50"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextOptions.TextFormattingMode" Value="Ideal"/>
+                <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+                <Setter Property="FontWeight" Value="Normal"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="Margin" Value="4,2"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+
+            <!-- TextBlock ШАПКА -->
+
+            <Style x:Key="TitleText" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="22"/>
+                <Setter Property="TextOptions.TextFormattingMode" Value="Ideal"/>
+                <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                <Setter Property="TextAlignment" Value="Center"/>
+            </Style>
+
+            <!-- Button (BLUE) -->
+
+            <Style TargetType="Button" x:Key="ModernButton">
+                <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Padding" Value="10,6"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Margin" Value="4"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Background" Value="#5BA1E5"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="0.98" ScaleY="0.98"/>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Background" Value="#3A6DB0"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Button (RED) -->
+            
+            <Style TargetType="Button" x:Key="ModernButton_RED">
+                <!-- Основной фон — теплый красный -->
+                <Setter Property="Background" Value="#E57373"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Padding" Value="10,6"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Margin" Value="4"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                        CornerRadius="8"
+                        Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <!-- При наведении — чуть более насыщенный красный -->
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Background" Value="#EF5350"/>
+                    </Trigger>
+                    <!-- При нажатии — темный красный -->
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="0.98" ScaleY="0.98"/>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Background" Value="#C62828"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Кнопка статуса -->
+            <Style x:Key="StatusButtonStyle" TargetType="Button">
+                <Setter Property="Padding" Value="10,6"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="MinWidth" Value="120"/>
+                <Setter Property="Margin" Value="4"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Background" Value="#4A90E2"/>
+                <Setter Property="BorderBrush" Value="#FFCCCCCC"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect Color="#999" BlurRadius="6" ShadowDepth="0" Opacity="0.25"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+        Background="{TemplateBinding Background}"
+        BorderBrush="{TemplateBinding BorderBrush}"
+        BorderThickness="{TemplateBinding BorderThickness}"
+        CornerRadius="6"
+        Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <!-- Hover -->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#FFEEEEEE"/>
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#FFAAAAAA"/>
+                                    <Setter Property="Foreground" Value="#333"/>
+                                    <Setter TargetName="border" Property="Effect">
+                                        <Setter.Value>
+                                            <DropShadowEffect Color="#000" BlurRadius="12" ShadowDepth="1" Opacity="0.3"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <!-- Disabled (отключает hover-эффект у активной) -->
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="border" Property="Background" Value="#CCFFCC"/>
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#66AA66"/>
+                                    <Setter Property="Foreground" Value="#333"/>
+                                    <Setter TargetName="border" Property="Cursor" Value="Arrow"/>
+                                    <Setter TargetName="border" Property="Effect">
+                                        <Setter.Value>
+                                            <DropShadowEffect Color="#000" BlurRadius="4" ShadowDepth="2" Opacity="0.4"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Кнопка завершения смены -->
+            
+            <Style x:Key="EndShiftButtonStyle" TargetType="Button" BasedOn="{StaticResource StatusButtonStyle}">
+                <Setter Property="Background" Value="#FF4444"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="BorderBrush" Value="#CC0000"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+
+
+            <!-- Тень для карточек -->
+            <DropShadowEffect x:Key="ShadowEffect" BlurRadius="10" ShadowDepth="2" Opacity="0.2"/>
+
+            <!-- Общий стиль ComboBox (Без заполнения) -->
+            <Style x:Key="ModernComboBox_NULL" TargetType="ComboBox">
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                <Setter Property="Padding" Value="10,4"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Foreground" Value="#2C3E50"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="BorderBrush" Value="#D0D7E5"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Height" Value="34"/>
+                <Setter Property="IsEditable" Value="False"/>
+                <Setter Property="IsTextSearchEnabled" Value="False"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Border x:Name="MainBorder"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="6"
+                SnapsToDevicePixels="True"
+                Effect="{StaticResource ShadowEffect}">
+                                <Grid>
+                                    <!-- Здесь показываем выбранный элемент -->
+                                    <ContentPresenter x:Name="ContentSite"
+                                  Content="{TemplateBinding SelectionBoxItem}"
+                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                  VerticalAlignment="Center"
+                                  Margin="12,0,30,0"/>
+
+                                    <!-- Стрелка -->
+                                    <ToggleButton x:Name="ToggleButton"
+                              Focusable="False"
+                              IsChecked="{Binding IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+                              ClickMode="Press"
+                              Background="Transparent"
+                              BorderThickness="0"
+                              HorizontalAlignment="Right"
+                              VerticalAlignment="Center"
+                              Width="30">
+                                        <Path x:Name="Arrow"
+                          Data="M 0 0 L 4 4 L 8 0 Z"
+                          Fill="#4A90E2"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"/>
+                                    </ToggleButton>
+
+                                    <!-- Выпадающий список -->
+                                    <Popup x:Name="Popup"
+                       Placement="Bottom"
+                       IsOpen="{TemplateBinding IsDropDownOpen}"
+                       AllowsTransparency="True"
+                       Focusable="False"
+                       PopupAnimation="Fade">
+                                        <Border Margin="0,2,0,0"
+                            Background="White"
+                            BorderBrush="#D0D7E5"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            SnapsToDevicePixels="True">
+                                            <ScrollViewer>
+                                                <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                            </ScrollViewer>
+                                        </Border>
+                                    </Popup>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="MainBorder" Property="BorderBrush" Value="#5BA1E5"/>
+                                    <Setter TargetName="Arrow" Property="Fill" Value="#5BA1E5"/>
+                                </Trigger>
+                                <Trigger Property="IsDropDownOpen" Value="True">
+                                    <Setter TargetName="MainBorder" Property="BorderBrush" Value="#4A90E2"/>
+                                    <Setter TargetName="Arrow" Property="Fill" Value="#4A90E2"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Foreground" Value="#999"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <local:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter"/>
+
+            <!-- Общий стиль ComboBox (C поиском) -->
+
+            <Style x:Key="ModernComboBox" TargetType="ComboBox">
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                <Setter Property="Padding" Value="10,4"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Foreground" Value="#2C3E50"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="BorderBrush" Value="#D0D7E5"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Height" Value="34"/>
+                <Setter Property="IsEditable" Value="True"/>
+                <Setter Property="IsTextSearchEnabled" Value="False"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Border x:Name="MainBorder"
+        Background="{TemplateBinding Background}"
+        BorderBrush="{TemplateBinding BorderBrush}"
+        BorderThickness="{TemplateBinding BorderThickness}"
+        CornerRadius="6"
+        SnapsToDevicePixels="True">
+                                <Grid>
+
+                                    <TextBlock Text="Введите ФИО..."
+               Margin="12,0,30,0"
+               VerticalAlignment="Center"
+               Foreground="Gray"
+               FontStyle="Italic"
+               IsHitTestVisible="False"
+               Visibility="{Binding Text,
+                                    RelativeSource={RelativeSource TemplatedParent},
+                                    Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}"/>
+
+                                    <!-- стрелка -->
+                                    <ToggleButton Name="ToggleButton"
+                  Focusable="False"
+                  IsChecked="{Binding IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+                  ClickMode="Press"
+                  Background="Transparent"
+                  BorderThickness="0"
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Center"
+                  Width="30">
+                                        <Path x:Name="Arrow"
+            Data="M 0 0 L 4 4 L 8 0 Z"
+            Fill="#4A90E2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"/>
+                                    </ToggleButton>
+
+                                    <!-- вот он: редактируемый текст -->
+                                    <TextBox x:Name="PART_EditableTextBox"
+             Margin="6,0,30,0"
+             Background="Transparent"
+             BorderThickness="0"
+             VerticalContentAlignment="Center"
+             Foreground="{TemplateBinding Foreground}"
+             FontSize="{TemplateBinding FontSize}"
+             Text="{Binding Text,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged}" />
+
+                                    <!-- выпадающий список -->
+                                    <Popup Name="Popup"
+           Placement="Bottom"
+           IsOpen="{TemplateBinding IsDropDownOpen}"
+           AllowsTransparency="True"
+           Focusable="False"
+           PopupAnimation="Fade">
+                                        <Grid MaxHeight="300" MinWidth="{TemplateBinding ActualWidth}">
+                                            <Border Margin="0,2,0,0"
+                Background="White"
+                BorderBrush="#D0D7E5"
+                BorderThickness="1"
+                CornerRadius="4"
+                SnapsToDevicePixels="True">
+                                                <ScrollViewer>
+                                                    <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                                </ScrollViewer>
+                                            </Border>
+                                        </Grid>
+                                    </Popup>
+                                </Grid>
+                            </Border>
+
+                            <!-- триггеры остались ваши -->
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="MainBorder" Property="BorderBrush" Value="#5BA1E5"/>
+                                    <Setter TargetName="Arrow" Property="Fill" Value="#5BA1E5"/>
+                                </Trigger>
+                                <Trigger Property="IsDropDownOpen" Value="True">
+                                    <Setter TargetName="MainBorder" Property="BorderBrush" Value="#4A90E2"/>
+                                    <Setter TargetName="Arrow" Property="Fill" Value="#4A90E2"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Foreground" Value="#999"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+            <SolidColorBrush x:Key="SpinnerBrush" Color="#4A90E2"/>
+
+            <!-- Шаблон крутилки -->
+            <ControlTemplate x:Key="SpinnerTemplate" TargetType="ContentControl">
+                <Grid Width="80" Height="80">
+                    <Path x:Name="Arc1"
+              Stroke="{StaticResource PrimaryBrush}"
+              StrokeThickness="6"
+              StrokeStartLineCap="Round"
+              StrokeEndLineCap="Round"
+              Data="M40,5 A35,35 0 0 1 75,40"
+              RenderTransformOrigin="0.5,0.5">
+                        <Path.RenderTransform>
+                            <RotateTransform x:Name="RotateArc1" Angle="0" CenterX="15" CenterY="15"/>
+                        </Path.RenderTransform>
+                    </Path>
+                </Grid>
+            </ControlTemplate>
+
+            <!-- Стиль для ContentControl-спиннера -->
+            <Style x:Key="LoadingSpinner" TargetType="ContentControl">
+                <Setter Property="Template" Value="{StaticResource SpinnerTemplate}"/>
+                <Setter Property="Width"   Value="100"/>
+                <Setter Property="Height"  Value="100"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment"   Value="Center"/>
+            </Style>
+
+            <!-- Полупрозрачный фон-оверлей -->
+            <Style x:Key="LoadingOverlayStyle" TargetType="Border">
+                <Setter Property="Background" Value="#99D0D7E5"/>
+                <Setter Property="Opacity" Value="0.6"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="Visibility" Value="Collapsed"/>
+            </Style>
+
+
+
+        </ResourceDictionary>
+
+        
+
+
+    </Application.Resources>
+    
+    
+    
+</Application>

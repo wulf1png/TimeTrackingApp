@@ -1,0 +1,11 @@
+﻿<Window x:Class="TimeTrackingApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        Title="Учёт рабочего времени" SizeChanged="Window_SizeChanged" MinWidth="300" MinHeight="300" UseLayoutRounding="True" 
+             SnapsToDevicePixels="True" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow">
+    
+        
+        <!-- Контент подгружается в зависимости от роли -->
+        <ContentControl x:Name="RoleContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+</Window>

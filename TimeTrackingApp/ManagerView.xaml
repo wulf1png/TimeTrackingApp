@@ -1,0 +1,243 @@
+﻿<UserControl x:Class="TimeTrackingApp.ManagerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:TimeTrackingApp"
+             Background="Transparent"
+             MinWidth="750" MinHeight="800" UseLayoutRounding="True" 
+             SnapsToDevicePixels="True">
+
+    <UserControl.Resources>
+
+        <ControlTemplate x:Key="TrackFillTemplate" TargetType="RepeatButton">
+            <Grid VerticalAlignment="Center" SnapsToDevicePixels="True">
+                <Rectangle Height="6"
+                   VerticalAlignment="Center"
+                   RadiusX="3" RadiusY="3"
+                   Fill="#4A90E2"/>
+            </Grid>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="TrackBackgroundTemplate" TargetType="RepeatButton">
+            <Grid VerticalAlignment="Center" SnapsToDevicePixels="True">
+                <Rectangle Height="6"
+                   VerticalAlignment="Center"
+                   RadiusX="3" RadiusY="3"
+                   Fill="#D0D7E5"/>
+            </Grid>
+        </ControlTemplate>
+ 
+
+        <Style x:Key="LoadingOverlayStyle" TargetType="Border">
+            <Setter Property="Background" Value="Black" />
+            <Setter Property="Opacity" Value="0.6"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
+        </Style>
+
+        <Style x:Key="LoadingTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#4A90E2"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#50E3C2"/>
+        <SolidColorBrush x:Key="BackgroundBrush" Color="#F7F9FC"/>
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="White"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#D0D7E5"/>
+        <SolidColorBrush x:Key="TextBrush" Color="#2C3E50"/>
+
+        <LinearGradientBrush x:Key="MainBackground" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#F7F9FC" Offset="0"/>
+            <GradientStop Color="#E3F2FD" Offset="1"/>
+        </LinearGradientBrush>
+
+        <Style x:Key="CardAnimated" TargetType="Border">
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                             To="1.01" Duration="0:0:0.2"/>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                             To="1.01" Duration="0:0:0.2"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                             To="1" Duration="0:0:0.2"/>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                             To="1" Duration="0:0:0.2"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
+ 
+    </UserControl.Resources>
+
+    <Grid Margin="20" SnapsToDevicePixels="True">
+        <!--Background="{StaticResource MainBackground}"-->
+        <!--Margin="20">-->
+        <StackPanel>
+            <TextBlock Text="Панель руководителя" Style="{StaticResource TitleText}" Margin="0,0,0,20"/>
+
+            <Border
+                    Background="{StaticResource CardBackgroundBrush}"
+                    Padding="16" CornerRadius="12"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1" Margin="0,0,0,16">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.2"/>
+                </Border.Effect>
+
+
+
+                <StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="12,0,0,12">
+                        <TextBlock Style="{StaticResource ModernTextBlock}" Text="Дата:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <DatePicker x:Name="datePicker" Width="140" SelectedDateChanged="DatePicker_SelectedDateChanged"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
+                            <TextBlock Text="Сотрудник:"
+VerticalAlignment="Center"
+Margin="0,0,10,0"
+Style="{StaticResource ModernTextBlock}"/>
+                            <Grid SnapsToDevicePixels="True">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="14*"/>
+                                    <RowDefinition Height="3*"/>
+                                </Grid.RowDefinitions>
+                                <!-- 1) Собственно ComboBox -->
+                                <ComboBox x:Name="EmployeeComboBox"
+   Width="260"
+   Style="{StaticResource ModernComboBox}"
+   IsEditable="True"
+   IsTextSearchEnabled="False"
+   StaysOpenOnEdit="True"
+   ItemsSource="{Binding EmployeesView}"
+   DisplayMemberPath="FullName"
+   SelectedValuePath="Uid"
+   SelectedValue="{Binding SelectedEmployeeId, Mode=TwoWay}"
+   Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+   IsDropDownOpen="{Binding IsDropDownOpen, Mode=TwoWay}"
+   IsReadOnly="False"
+   VerticalContentAlignment="Center" Grid.RowSpan="2" SelectionChanged="EmployeeComboBox_SelectionChanged"/>
+
+                               
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                    <Border x:Name="LoadingOverlay" Style="{StaticResource LoadingOverlayStyle}">
+                        <TextBlock  Text="Загрузка..." Style="{StaticResource LoadingTextStyle}"/>
+                    </Border>
+
+
+
+                    <TextBlock Text="График смен" Style="{StaticResource TitleText}" Margin="0,0,0,12"/>
+
+                    <!-- Легенда -->
+                    <StackPanel Margin="12,0,0,8">
+                        <WrapPanel>
+                            <Rectangle Fill="LimeGreen" Width="20" Height="20"/>
+                            <TextBlock Text="— На работе" Margin="5,0,20,0" Style="{StaticResource ModernTextBlock}"/>
+                            <Rectangle Fill="Yellow" Width="20" Height="20"/>
+                            <TextBlock Text="— Обед" Margin="5,0,20,0" Style="{StaticResource ModernTextBlock}"/>
+                            <Rectangle Fill="MediumPurple" Width="20" Height="20"/>
+                            <TextBlock Text="— IT проблемы" Margin="5,0,20,0" Style="{StaticResource ModernTextBlock}"/>
+                            <Rectangle Fill="Blue" Width="20" Height="20"/>
+                            <TextBlock Text="— Тренинг" Margin="5,0,20,0" Style="{StaticResource ModernTextBlock}"/>
+                            <Rectangle Fill="LightSkyBlue" Width="20" Height="20"/>
+                            <TextBlock Text="— Собрание" Margin="5,0,0,0" Style="{StaticResource ModernTextBlock}"/>
+                        </WrapPanel>
+                    </StackPanel>
+
+                    <!-- Масштаб -->
+                    <StackPanel Orientation="Horizontal" Margin="12,10,0,12">
+                        <TextBlock Text="Масштаб:" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="Gray" Style="{StaticResource ModernTextBlock}"/>
+                        <Slider x:Name="ZoomSlider" Minimum="0.5" Maximum="2" Value="1" Width="200" TickFrequency="0.1" IsSnapToTickEnabled="False" ValueChanged="ZoomSlider_ValueChanged" Loaded="ZoomSlider_Loaded" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="12,10,0,0">
+                        <!-- ... ваши существующие кнопки ... -->
+                        <!--<Button Content="🌱 Засеять тест-месяц"
+            Click="SeedTestMonth_Click"
+            Style="{StaticResource ModernButton}"
+            Margin="4"/>-->
+                    </StackPanel>
+
+                    <Border 
+        Background="{StaticResource CardBackgroundBrush}"
+        Padding="16"
+        CornerRadius="12"
+        BorderBrush="{StaticResource BorderBrush}"
+        BorderThickness="1"
+        Margin="0,0,0,16">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.2"/>
+                        </Border.Effect>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                            <Viewbox Stretch="Uniform" StretchDirection="DownOnly">
+                                <Canvas x:Name="GraphCanvas" Width="960" Height="200" Background="White" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+                            </Viewbox>
+                        </ScrollViewer>
+                    </Border>
+
+
+                    <TextBlock Text="Сегменты смены:" Style="{StaticResource TitleText}" FontSize="18" Margin="0,12,0,6"/>
+                    <ItemsControl x:Name="SegmentsControl" ItemsSource="{Binding Segments, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="12,2">
+                                    <ComboBox Width="120"
+                          Style="{StaticResource ModernComboBox_NULL}"
+                          ItemsSource="{Binding StatusOptions, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                          SelectedItem="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="False"/>
+                                    <TextBox Width="60" Margin="10,0,0,0"
+                         Style="{StaticResource STextBox}"
+                         Text="{Binding Start, StringFormat=hh\\:mm}"/>
+                                    <TextBox Width="60" Margin="10,0,10,0"
+                         Style="{StaticResource STextBox}"
+                         Text="{Binding End, StringFormat=hh\\:mm}"/>
+                                    <Button Content="❌"
+                        Click="RemoveSegment_Click"
+                        Tag="{Binding Id}"
+                        Style="{StaticResource ModernButton_RED}"
+                        Width="40"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <StackPanel Orientation="Horizontal" Margin="12,10,0,0">
+                        <Button x:Name="AddSegmentButton" Content="+ Добавить сегмент" Click="AddSegment_Click" Style="{StaticResource ModernButton}"/>
+                        <Button x:Name="SaveSegmentsButton" Content="💾 Сохранить" Click="SaveSegments_Click" Style="{StaticResource ModernButton}"/>
+                        
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="12,20,0,0">
+                        
+                        <Button x:Name="FillMonthButton" Content="📅 Заполнить месяц" Click="FillMonthButton_ClicllMonthButton_Click" Style="{StaticResource ModernButton}"/>
+                        <Button x:Name="AddCustomStatusButton"
+Content="🏖️ Отпуска/Больничные"
+Click="AddCustomStatusButton_Click"
+Style="{StaticResource ModernButton}"
+Margin="4"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</UserControl>

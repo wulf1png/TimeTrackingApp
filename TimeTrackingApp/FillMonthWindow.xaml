@@ -1,0 +1,142 @@
+﻿<Window x:Class="TimeTrackingApp.FillMonthWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Проставить график на месяц" Height="600" Width="583"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        BorderThickness="0" UseLayoutRounding="True" 
+             SnapsToDevicePixels="True">
+
+    <!--<Window.Effect>
+        <DropShadowEffect Color="{StaticResource PrimaryColor}" BlurRadius="30" ShadowDepth="0" Opacity="0.4"/>
+    </Window.Effect>-->
+
+    
+
+    <Window.Resources>
+
+        <!-- Стиль секций -->
+        <Style TargetType="GroupBox">
+            <Setter Property="FontSize" Value="14"/>
+            
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="Margin" Value="0,8,0,8"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#ddd"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <!-- Стиль кнопок -->
+
+    </Window.Resources>
+
+    <Border CornerRadius="16" BorderBrush="#4A90E2" BorderThickness="1" Background="White">
+        <Border.RenderTransform>
+            <TranslateTransform x:Name="WindowTranslate" Y="60"/>
+        </Border.RenderTransform>
+        <Grid SnapsToDevicePixels="True">
+        <StackPanel Margin="20">
+
+            <!-- Имя сотрудника -->
+            <TextBlock x:Name="EmployeeNameTextBlock"
+                       Style="{StaticResource TitleText}"/>
+
+            <!-- Выбор месяца и года -->
+                <GroupBox Header="Месяц и Год">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Месяц:" VerticalAlignment="Center" Margin="0,0,8,0" Style="{StaticResource ModernTextBlock}"/>
+                        <ComboBox x:Name="MonthComboBox" Width="140" Margin="0,0,10,0" Style="{StaticResource ModernComboBox_NULL}">
+                            <ComboBox.ItemsSource>
+                            <x:Array Type="{x:Type sys:String}" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                <sys:String>Январь</sys:String>
+                                <sys:String>Февраль</sys:String>
+                                <sys:String>Март</sys:String>
+                                <sys:String>Апрель</sys:String>
+                                <sys:String>Май</sys:String>
+                                <sys:String>Июнь</sys:String>
+                                <sys:String>Июль</sys:String>
+                                <sys:String>Август</sys:String>
+                                <sys:String>Сентябрь</sys:String>
+                                <sys:String>Октябрь</sys:String>
+                                <sys:String>Ноябрь</sys:String>
+                                <sys:String>Декабрь</sys:String>
+                            </x:Array>
+                        </ComboBox.ItemsSource>
+                    </ComboBox>
+
+                        <TextBlock Text="Год:" VerticalAlignment="Center" Margin="10,0,8,0" Style="{StaticResource ModernTextBlock}"/>
+                        <ComboBox x:Name="YearComboBox" Width="80" Style="{StaticResource ModernComboBox_NULL}"/>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Будние дни -->
+            <GroupBox Header="Настройки будней">
+                <UniformGrid Columns="2" Margin="0,8,0,0">
+                        <TextBlock Text="Утро:" VerticalAlignment="Center" Style="{StaticResource ModernTextBlock}"/>
+                    <StackPanel Orientation="Horizontal">
+                            <ComboBox x:Name="WeekdayMorningStatus" Width="120" Margin="0,0,5,0" Style="{StaticResource ModernComboBox_NULL}"/>
+                            <TextBox x:Name="WeekdayMorningStart" Width="60" Text="09:00" Style="{StaticResource STextBox}" />
+                            <TextBox x:Name="WeekdayMorningEnd" Width="60" Text="13:00" Margin="5,0,0,0" Style="{StaticResource STextBox}"/>
+                    </StackPanel>
+
+                        <TextBlock Text="Обед:" VerticalAlignment="Center" Style="{StaticResource ModernTextBlock}"/>
+                    <StackPanel Orientation="Horizontal">
+                            <ComboBox x:Name="WeekdayLunchStatus" Width="120" Margin="0,0,5,0" Style="{StaticResource ModernComboBox_NULL}"/>
+                            <TextBox x:Name="WeekdayLunchStart" Width="60" Text="13:00" Style="{StaticResource STextBox}"/>
+                            <TextBox x:Name="WeekdayLunchEnd" Width="60" Text="14:00" Margin="5,0,0,0" Style="{StaticResource STextBox}"/>
+                    </StackPanel>
+
+                        <TextBlock Text="Вечер:" VerticalAlignment="Center" Style="{StaticResource ModernTextBlock}"/>
+                    <StackPanel Orientation="Horizontal">
+                            <ComboBox x:Name="WeekdayAfternoonStatus" Width="120" Margin="0,0,5,0" Style="{StaticResource ModernComboBox_NULL}"/>
+                            <TextBox x:Name="WeekdayAfternoonStart" Width="60" Text="14:00" Style="{StaticResource STextBox}"/>
+                            <TextBox x:Name="WeekdayAfternoonEnd" Width="60" Text="18:00" Margin="5,0,0,0" Style="{StaticResource STextBox}"/>
+                    </StackPanel>
+                </UniformGrid>
+            </GroupBox>
+
+            <!-- Чекбокс выходных -->
+            <CheckBox x:Name="IncludeWeekendsCheckBox" Content="Заполнять выходные" Margin="0,10,0,10"/>
+
+            <!-- Выходные дни -->
+            <StackPanel x:Name="WeekendSettingsPanel" Visibility="Collapsed">
+                <GroupBox Header="Настройки выходных">
+                    <UniformGrid Columns="2" Margin="0,8,0,0">
+                            <TextBlock Text="Утро:" VerticalAlignment="Center" Style="{StaticResource ModernTextBlock}"/>
+                        <StackPanel Orientation="Horizontal">
+                                <ComboBox x:Name="WeekendMorningStatus" Width="120" Margin="0,0,5,0" Style="{StaticResource ModernComboBox_NULL}"/>
+                                <TextBox x:Name="WeekendMorningStart" Width="60" Text="10:00" Style="{StaticResource STextBox}"/>
+                                <TextBox x:Name="WeekendMorningEnd" Width="60" Text="13:00" Margin="5,0,0,0" Style="{StaticResource STextBox}"/>
+                        </StackPanel>
+
+                            <TextBlock Text="Обед:" VerticalAlignment="Center" Style="{StaticResource ModernTextBlock}"/>
+                        <StackPanel Orientation="Horizontal">
+                                <ComboBox x:Name="WeekendLunchStatus" Width="120" Margin="0,0,5,0" Style="{StaticResource ModernComboBox_NULL}"/>
+                                <TextBox x:Name="WeekendLunchStart" Width="60" Text="13:00" Style="{StaticResource STextBox}"/>
+                                <TextBox x:Name="WeekendLunchEnd" Width="60" Text="14:00" Margin="5,0,0,0" Style="{StaticResource STextBox}"/>
+                        </StackPanel>
+
+                            <TextBlock Text="Вечер:" VerticalAlignment="Center" Style="{StaticResource ModernTextBlock}"/>
+                        <StackPanel Orientation="Horizontal">
+                                <ComboBox x:Name="WeekendAfternoonStatus" Width="120" Margin="0,0,5,0" Style="{StaticResource ModernComboBox_NULL}"/>
+                                <TextBox x:Name="WeekendAfternoonStart" Width="60" Text="14:00" Style="{StaticResource STextBox}"/>
+                                <TextBox x:Name="WeekendAfternoonEnd" Width="60" Text="16:00" Margin="5,0,0,0" Style="{StaticResource STextBox}"/>
+                        </StackPanel>
+                    </UniformGrid>
+                </GroupBox>
+            </StackPanel>
+
+            <!-- Кнопки -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0" Height="50">
+                    <Button Content="Проставить" Width="140" Click="Apply_Click" Style="{StaticResource ModernButton}"/>
+                    <Button Content="Отмена" Width="80" Click="Cancel_Click" Style="{StaticResource ModernButton_RED}"/>
+            </StackPanel>
+
+        </StackPanel>
+
+        </Grid>
+    </Border>
+</Window>
