@@ -1,16 +1,29 @@
 ﻿<UserControl x:Class="TimeTrackingApp.AdminView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:TimeTrackingApp"
-             Background="{DynamicResource SoftBackground}" UseLayoutRounding="True" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:TimeTrackingApp"
+             Background="{DynamicResource SoftBackground}"
+             UseLayoutRounding="True"
              SnapsToDevicePixels="True">
     <UserControl.Resources>
-
+        
+        
+        <!-- Фон -->
         <LinearGradientBrush x:Key="SoftBackground" StartPoint="0,0" EndPoint="1,1">
             <GradientStop Color="#F7F9FC" Offset="0" />
             <GradientStop Color="#E3F2FD" Offset="1" />
         </LinearGradientBrush>
 
-        <local:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter"/>
+        <!-- Конвертер для подсветки рамки -->
+        <local:StringToBrushConverter x:Key="StringToBrushConverter"
+                                      NormalBrush="{StaticResource BorderBrush}"
+                                      ErrorBrush="Red"/>
+
+        <!-- Стили и цвета -->
+        <SolidColorBrush x:Key="PrimaryBrush"        Color="#4A90E2"/>
+        <SolidColorBrush x:Key="BorderBrush"         Color="#D0D7E5"/>
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="White"/>
+        <SolidColorBrush x:Key="TextBrush"           Color="#2C3E50"/>
 
         <Style x:Key="StyledListBox" TargetType="ListBox">
             <Setter Property="Background" Value="#F9F9F9"/>
@@ -19,34 +32,40 @@
             <Setter Property="Padding" Value="10"/>
             <Setter Property="FontSize" Value="13"/>
         </Style>
-
-        
-        <!-- Цвета -->
-        <SolidColorBrush x:Key="PrimaryBrush"       Color="#4A90E2"/>
-        <SolidColorBrush x:Key="BorderBrush"        Color="#D0D7E5"/>
-        <SolidColorBrush x:Key="CardBackgroundBrush" Color="White"/>
-        <SolidColorBrush x:Key="TextBrush"          Color="#2C3E50"/>
-
     </UserControl.Resources>
 
-    <Grid Margin="20" SnapsToDevicePixels="True">
+    <Grid Margin="20">
+        <!-- Заголовок -->
         <TextBlock Text="Регистрация нового пользователя"
-           Style="{StaticResource TitleText}"
-           />
-        
+                   Style="{StaticResource TitleText}"
+                   Margin="0,0,0,12"/>
+
         <Border Background="{StaticResource CardBackgroundBrush}"
                 CornerRadius="12"
                 Padding="24"
-                Margin="40"
+                Margin="0,32,0,0"
                 Effect="{StaticResource ShadowEffect}">
             <StackPanel>
 
-                
+                <!-- Ошибка -->
+                <TextBlock x:Name="ErrorTextBlock"
+                           Foreground="Red"
+                           FontSize="14"
+                           Visibility="Collapsed"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,16"/>
 
-                <!-- Параметры пользователя: две колонки -->
-                <Grid Margin="0,0,0,20" SnapsToDevicePixels="True">
+                <TextBlock x:Name="InfoTextBlock"
+           Foreground="Green"
+           FontSize="14"
+           Visibility="Collapsed"
+           TextWrapping="Wrap"
+           Margin="0,0,0,16"/>
+
+                <!-- Первая группа: ФИО + Email -->
+                <Grid Margin="0,0,0,20">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -56,27 +75,34 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Имя -->
-                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernTextBlock}" Text="Имя:"/>
-                    <TextBox    Grid.Row="0" Grid.Column="1" Style="{StaticResource STextBox}" x:Name="FirstNameBox" Margin="0,0,0,10"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernTextBlock}" Text="Имя:" Margin="0,0,8,0"/>
+                    <TextBox    Grid.Row="0" Grid.Column="1" x:Name="FirstNameBox" Style="{StaticResource STextBox}"
+                                Tag="Normal"
+                                BorderBrush="{Binding Tag, ElementName=FirstNameBox, Converter={StaticResource StringToBrushConverter}}"/>
 
-                    <!-- Фамилия -->
-                    <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernTextBlock}" Text="Фамилия:"/>
-                    <TextBox    Grid.Row="1" Grid.Column="1" Style="{StaticResource STextBox}" x:Name="LastNameBox" Margin="0,0,0,10"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernTextBlock}" Text="Фамилия:" Margin="0,8,8,0"/>
+                    <TextBox    Grid.Row="1" Grid.Column="1" x:Name="LastNameBox" Style="{StaticResource STextBox}"
+                                Margin="0,8,0,0"
+                                Tag="Normal"
+                                BorderBrush="{Binding Tag, ElementName=LastNameBox, Converter={StaticResource StringToBrushConverter}}"/>
 
-                    <!-- Отчество -->
-                    <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernTextBlock}" Text="Отчество:"/>
-                    <TextBox    Grid.Row="2" Grid.Column="1" Style="{StaticResource STextBox}" x:Name="PatronymicBox" Margin="0,0,0,10"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernTextBlock}" Text="Отчество:" Margin="0,8,8,0"/>
+                    <TextBox    Grid.Row="2" Grid.Column="1" x:Name="PatronymicBox" Style="{StaticResource STextBox}"
+                                Margin="0,8,0,0"
+                                Tag="Normal"
+                                BorderBrush="{Binding Tag, ElementName=PatronymicBox, Converter={StaticResource StringToBrushConverter}}"/>
 
-                    <!-- Email -->
-                    <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBlock}" Text="Email:"/>
-                    <TextBox    Grid.Row="3" Grid.Column="1" Style="{StaticResource STextBox}" x:Name="EmailBox" Margin="0,0,0,10"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBlock}" Text="Email:" Margin="0,8,8,0"/>
+                    <TextBox    Grid.Row="3" Grid.Column="1" x:Name="EmailBox" Style="{StaticResource STextBox}"
+                                Margin="0,8,0,0"
+                                Tag="Normal"
+                                BorderBrush="{Binding Tag, ElementName=EmailBox, Converter={StaticResource StringToBrushConverter}}"/>
                 </Grid>
 
-                <!-- Вторая группа полей -->
-                <Grid Margin="0,0,0,20" SnapsToDevicePixels="True">
+                <!-- Вторая группа: Телефон, Логин, Пароль -->
+                <Grid Margin="0,0,0,20">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -85,47 +111,53 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Телефон -->
-                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernTextBlock}" Text="Телефон:"/>
-                    <TextBox    Grid.Row="0" Grid.Column="1" Style="{StaticResource STextBox}" x:Name="PhoneBox" Margin="0,0,0,10"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernTextBlock}" Text="Телефон:" Margin="0,0,8,0"/>
+                    <TextBox    Grid.Row="0" Grid.Column="1" x:Name="PhoneBox" Style="{StaticResource STextBox}"
+                                Tag="Normal"
+                                BorderBrush="{Binding Tag, ElementName=PhoneBox, Converter={StaticResource StringToBrushConverter}}"/>
 
-                    <!-- Логин -->
-                    <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernTextBlock}" Text="Логин:"/>
-                    <TextBox    Grid.Row="1" Grid.Column="1" Style="{StaticResource STextBox}" x:Name="LoginBox" Margin="0,0,0,10"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernTextBlock}" Text="Логин:" Margin="0,8,8,0"/>
+                    <TextBox    Grid.Row="1" Grid.Column="1" x:Name="LoginBox" Style="{StaticResource STextBox}"
+                                Margin="0,8,0,0"
+                                Tag="Normal"
+                                BorderBrush="{Binding Tag, ElementName=LoginBox, Converter={StaticResource StringToBrushConverter}}"/>
 
-                    <!-- Пароль -->
-                    <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernTextBlock}" Text="Пароль:"/>
-                    <PasswordBox Grid.Row="2" Grid.Column="1" Style="{StaticResource StyledPasswordBox}" x:Name="PasswordBox"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernTextBlock}" Text="Пароль:" Margin="0,8,8,0"/>
+                    <PasswordBox Grid.Row="2" Grid.Column="1" x:Name="PasswordBox" Style="{StaticResource StyledPasswordBox}"
+                                 Margin="0,8,0,0"
+                                 Tag="Normal"
+                                 BorderBrush="{Binding Tag, ElementName=PasswordBox, Converter={StaticResource StringToBrushConverter}}"/>
                 </Grid>
 
                 <!-- Роль и кнопка -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <ComboBox x:Name="RoleBox" Margin="0,0,20,0"
-                              Width="160"
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <ComboBox x:Name="RoleBox"
                               Style="{StaticResource ModernComboBox_NULL}"
-                              SelectedIndex="0">
+                              Width="160"
+                              SelectedIndex="0"
+                              Margin="0,0,16,0">
                         <ComboBoxItem Content="employee"/>
                         <ComboBoxItem Content="manager"/>
                         <ComboBoxItem Content="accountant"/>
                         <ComboBoxItem Content="admin"/>
                     </ComboBox>
-
                     <Button Content="Зарегистрировать"
                             Style="{StaticResource ModernButton}"
                             Width="160"
                             Click="Register_Click"/>
                 </StackPanel>
 
-                <Separator Margin="0,10"/>
+                <Separator Margin="0,0,0,16"/>
 
-                <TextBlock Text="Логи системы" FontSize="16" FontWeight="SemiBold" Foreground="#444" Style="{StaticResource ModernTextBlock}"/>
-                <ListBox x:Name="LogsBox" Height="120" Style="{StaticResource StyledListBox}" />
-
+                <TextBlock Text="Логи системы"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           Foreground="#444"
+                           Margin="0,0,0,8"/>
+                <ListBox x:Name="LogsBox"
+                         Height="120"
+                         Style="{StaticResource StyledListBox}"/>
             </StackPanel>
-            
         </Border>
-        
     </Grid>
-    
-    
 </UserControl>

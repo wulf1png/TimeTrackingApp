@@ -52,9 +52,82 @@ namespace TimeTrackingApp
             public string phone { get; set; }
         }
 
-        // ===================== 🔧 Плановый график =====================
+        /// <summary>
+        /// Возвращает всех пользователей как список пар (ключ, модель UserData),
+        /// поддерживая и словарь, и массив в Firebase.
+        /// </summary>
+        public static async Task<List<(string Key, UserData User)>> GetAllUsersAsync()
+        {
+            // Попробуем прочесть как словарь { "uid": {...}, ... }
+            try
+            {
+                var dict = await client
+                    .Child("users")
+                    .OnceSingleAsync<Dictionary<string, UserData>>();
 
-        public class PlannedSegment
+                return dict
+                    .Select(kv => (kv.Key, kv.Value))
+                    .ToList();
+            }
+            catch
+            {
+                // Если сервер прислал JSON-массив [...]
+            }
+
+            // Тогда читаем как List<UserData>
+            try
+            {
+                var list = await client
+                    .Child("users")
+                    .OnceSingleAsync<List<UserData>>();
+                var result = new List<(string, UserData)>();
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var u = list[i];
+                    if (u == null) continue;      // пропускам null-элементы
+                    result.Add((i.ToString(), u));
+                }
+                return result;
+            }
+            catch (Exception)
+            {
+                // Иначе возвращаем пустой список
+                return new List<(string, UserData)>();
+            }
+        }
+
+        public static Task SaveUserAsync(string userId, UserData data)
+            => client.Child("users").Child(userId).PutAsync(data);
+
+        public static async Task<List<FirebaseObject<string>>> GetLogsRawAsync()
+        {
+            var raw = await client
+                .Child("logs")
+                .OnceAsync<string>();
+
+            // OnceAsync<string>() возвращает IReadOnlyCollection<FirebaseObject<string>>
+            // конвертируем в List<FirebaseObject<string>>
+            return raw.ToList();
+        }
+
+        public static Task PostLogAsync(string message)
+            => client.Child("logs").PostAsync(message);
+
+        public static async Task<long> AllocateNextUserIdAsync()
+        {
+            var node = client.Child("metadata").Child("nextUserId");
+            long current;
+            try { current = await node.OnceSingleAsync<long>(); }
+            catch { current = 1; }
+            await node.PutAsync(current + 1);
+            return current;
+        }
+    
+
+
+// ===================== 🔧 Плановый график =====================
+
+public class PlannedSegment
         {
             public string UserId { get; set; }
             public DateTime Date { get; set; }
@@ -327,6 +400,9 @@ namespace TimeTrackingApp
                 await SaveWorkStatusRecordAsync(record);
             }
         }
+
+
+        
 
 
     }

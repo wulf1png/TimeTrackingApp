@@ -215,7 +215,6 @@
 
 
             <!-- Textbox -->
-
             <Style x:Key="STextBox" TargetType="TextBox">
                 <Setter Property="SnapsToDevicePixels" Value="True"/>
                 <Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -230,22 +229,32 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="TextBox">
                             <Border x:Name="Bd"
-                 Background="{TemplateBinding Background}"
-                 BorderBrush="{TemplateBinding BorderBrush}"
-                 BorderThickness="{TemplateBinding BorderThickness}"
-                 CornerRadius="10"
-                 SnapsToDevicePixels="True">
-                                <Grid>
-                                    <ScrollViewer x:Name="PART_ContentHost"
-                               VerticalAlignment="Center"
-                               Margin="2"/>
-                                </Grid>
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="10"
+                SnapsToDevicePixels="True">
+                                <ScrollViewer x:Name="PART_ContentHost"
+                        VerticalAlignment="Center"
+                        Margin="2"/>
                             </Border>
                             <ControlTemplate.Triggers>
-                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                <!-- Этот DataTrigger всегда побьёт IsKeyboardFocused -->
+                                <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                       Value="Error">
+                                    <Setter TargetName="Bd" Property="BorderBrush" Value="Red"/>
+                                </DataTrigger>
+
+                                <!-- Обычный фокус-триггер срабатывает ТОЛЬКО если нет ошибки -->
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsKeyboardFocused" Value="True"/>
+                                        <Condition Property="Tag" Value="Normal"/>
+                                    </MultiTrigger.Conditions>
                                     <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
                                     <Setter TargetName="Bd" Property="Background" Value="#FBFCFF"/>
-                                </Trigger>
+                                </MultiTrigger>
+
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Setter TargetName="Bd" Property="Background" Value="#EEE"/>
                                     <Setter Property="Foreground" Value="#AAA"/>
@@ -255,7 +264,8 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
+            
+            
             <!-- PasswordBox -->
 
             <Style x:Key="StyledPasswordBox" TargetType="PasswordBox">
@@ -272,20 +282,33 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="PasswordBox">
                             <Border x:Name="Bd"
-                 Background="{TemplateBinding Background}"
-                 BorderBrush="{TemplateBinding BorderBrush}"
-                 BorderThickness="{TemplateBinding BorderThickness}"
-                 CornerRadius="10"
-                 SnapsToDevicePixels="True">
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="10"
+                SnapsToDevicePixels="True">
                                 <ScrollViewer x:Name="PART_ContentHost"
-                           VerticalAlignment="Center"
-                           Margin="2"/>
+                        VerticalAlignment="Center"
+                        Margin="2"/>
                             </Border>
                             <ControlTemplate.Triggers>
-                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                <!-- Если Tag="Error" — всегда красная рамка -->
+                                <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                       Value="Error">
+                                    <Setter TargetName="Bd" Property="BorderBrush" Value="Red"/>
+                                </DataTrigger>
+
+                                <!-- Только когда в фокусе и нет ошибки — применяем primary-цвет -->
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsKeyboardFocused" Value="True"/>
+                                        <Condition Property="Tag" Value="Normal"/>
+                                    </MultiTrigger.Conditions>
                                     <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
                                     <Setter TargetName="Bd" Property="Background" Value="#FBFCFF"/>
-                                </Trigger>
+                                </MultiTrigger>
+
+                                <!-- Отключённое состояние -->
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Setter TargetName="Bd" Property="Background" Value="#EEE"/>
                                     <Setter Property="Foreground" Value="#AAA"/>
@@ -295,7 +318,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
+            
             <!-- TextBlock ОБЫЧНЫЙ ТЕКСТ-->
 
             <Style x:Key="ModernTextBlock" TargetType="TextBlock">
@@ -719,7 +742,7 @@
                 <Setter Property="Visibility" Value="Collapsed"/>
             </Style>
 
-
+            
 
         </ResourceDictionary>
 

@@ -1,6 +1,6 @@
 ﻿<Window x:Class="TimeTrackingApp.LoginWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:TimeTrackingApp"
         Title="Вход"
         WindowStartupLocation="CenterScreen"
         Background="#F7F9FC"
@@ -8,54 +8,73 @@
         WindowStyle="None"
         SizeToContent="WidthAndHeight"
         MinWidth="350" MinHeight="410" Width="350" UseLayoutRounding="True" 
-             SnapsToDevicePixels="True">
+        SnapsToDevicePixels="True">
 
     <Window.Resources>
-        <SolidColorBrush x:Key="PrimaryBrush" Color="#4A90E2"/>
-        <SolidColorBrush x:Key="AccentBrush" Color="#50E3C2"/>
+        <!-- ... существующие ... -->
+
         <SolidColorBrush x:Key="CardBackgroundBrush" Color="White"/>
-        <SolidColorBrush x:Key="BorderBrush" Color="#D0D7E5"/>
-        <SolidColorBrush x:Key="TextBrush" Color="#2C3E50"/>
-
-
- 
+        <SolidColorBrush x:Key="BorderBrush"       Color="#D0D7E5"/>
+        <SolidColorBrush x:Key="TextBrush"         Color="#2C3E50"/>
+        <SolidColorBrush x:Key="PrimaryBrush"      Color="#4A90E2"/>
+        <SolidColorBrush x:Key="AccentBrush"       Color="#50E3C2"/>
+        <local:StringToBrushConverter x:Key="StringToBrushConverter"
+                                  NormalBrush="{StaticResource BorderBrush}"
+                                  ErrorBrush="Red"/>
     </Window.Resources>
 
-
-
     <Grid SnapsToDevicePixels="True">
-        
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Border BorderThickness="8" BorderBrush="Transparent" Background="Transparent" />
-        <!-- Верхняя панель с кнопкой закрытия -->
-        <Border Background="{StaticResource PrimaryBrush}" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Top" MouseDown="Header_MouseDown">
-            <Grid HorizontalAlignment="Right" SnapsToDevicePixels="True">
-                <Button Content="X" Background="Transparent" Foreground="White" Width="30" Height="30" Click="CloseButton_Click" BorderBrush="Transparent" Style="{StaticResource PrimaryButtonStyle}"/>
-            </Grid>
+
+        <!-- Верхняя панель -->
+        <Border Background="{StaticResource PrimaryBrush}" Grid.Row="0" MouseDown="Header_MouseDown">
+            <Button Content="X" Click="CloseButton_Click"
+                    Background="Transparent" Foreground="White"
+                    Width="30" Height="30" HorizontalAlignment="Right"
+                    Style="{StaticResource PrimaryButtonStyle}"/>
         </Border>
 
-        <!-- Основной контент окна -->
-        <Grid Grid.Row="1" VerticalAlignment="Top" SnapsToDevicePixels="True">
+        <!-- Содержимое -->
+        <Grid Grid.Row="1" VerticalAlignment="Top">
             <Border Background="{StaticResource CardBackgroundBrush}"
-                Padding="24"
-                Margin="40,40,40,15"
-                CornerRadius="12"
-                BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="1">
-            <Border.Effect>
-                <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.25"/>
-            </Border.Effect>
-            <StackPanel>
-                    <TextBlock Text="Добро пожаловать" FontSize="20" Margin="0,0,0,16" HorizontalAlignment="Center" Style="{StaticResource ModernTextBlock}"/>
-                    <TextBlock Text="Логин:" Style="{StaticResource ModernTextBlock}"/>
-                    <TextBox x:Name="LoginBox" Height="39" Style="{StaticResource STextBox}"/>
+                    Padding="24" Margin="40,40,40,15"
+                    CornerRadius="12"
+                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.25"/>
+                </Border.Effect>
 
-                    <TextBlock Text="Пароль:" Style="{StaticResource ModernTextBlock}"/>
-                    <PasswordBox x:Name="PasswordBox" Height="39" Style="{StaticResource StyledPasswordBox}"/>
-                <Button Content="Войти" Click="Login_Click" Style="{StaticResource ModernButton}" Height="37" Margin="0,30,0,0"/>
+                <StackPanel>
+                    <TextBlock Text="Добро пожаловать"
+                               FontSize="20" Margin="0,0,0,16"
+                               HorizontalAlignment="Center"
+                               Style="{StaticResource ModernTextBlock}"/>
+
+                    <!-- Здесь будет текст ошибки -->
+                    <TextBlock x:Name="ErrorTextBlock"
+                               Foreground="Red"
+                               FontSize="14"
+                               Visibility="Collapsed"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Логин:" Style="{StaticResource ModernTextBlock}"/>
+                    <TextBox x:Name="LoginBox" Height="39" Style="{StaticResource STextBox}"
+                             BorderBrush="{Binding ElementName=LoginBox, Path=Tag, Converter={StaticResource StringToBrushConverter}}"
+                             Tag="Normal"/>
+
+                    <TextBlock Text="Пароль:" Style="{StaticResource ModernTextBlock}"
+                               Margin="0,10,0,0"/>
+                    <PasswordBox x:Name="PasswordBox" Height="39" Style="{StaticResource StyledPasswordBox}"
+                                 BorderBrush="{Binding ElementName=PasswordBox, Path=Tag, Converter={StaticResource StringToBrushConverter}}"
+                                 Tag="Normal"/>
+
+                    <Button Content="Войти" Click="Login_Click"
+                            Style="{StaticResource ModernButton}"
+                            Height="37" Margin="0,30,0,0"/>
                 </StackPanel>
             </Border>
         </Grid>
